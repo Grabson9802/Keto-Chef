@@ -14,13 +14,13 @@ class RecipeAPIService: RecipeServiceProtocol {
                 print("Invalid URL")
                 return
             }
-
+            
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let error = error {
                     print("Error: \(error)")
                     return
                 }
-
+                
                 if let data = data {
                     do {
                         let decoder = JSONDecoder()
@@ -31,7 +31,40 @@ class RecipeAPIService: RecipeServiceProtocol {
                     }
                 }
             }
-
+            
+            task.resume()
+        } else {
+            print("The API key could not be read.")
+        }
+    }
+    
+    func fetchRecipeDetails(for recipeId: Int, completion: @escaping (RecipeDetails?) -> Void) {
+        if let apiKey = ConfigReader.readApiKey() {
+            guard let url = URL(string: "https://api.spoonacular.com/recipes/\(recipeId)/information?includeNutrition=true&apiKey=\(apiKey)") else {
+                print("Invalid URL")
+                completion(nil)
+                return
+            }
+            
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print("Error: \(error)")
+                    completion(nil)
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        let decoder = JSONDecoder()
+                        let result = try decoder.decode(RecipeDetails.self, from: data)
+                        completion(result)
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                        completion(nil)
+                    }
+                }
+            }
+            
             task.resume()
         } else {
             print("The API key could not be read.")

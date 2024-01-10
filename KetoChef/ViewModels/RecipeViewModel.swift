@@ -9,7 +9,9 @@ import SwiftUI
 
 class RecipeViewModel: ObservableObject {
     private let recipeService: RecipeServiceProtocol
+    
     @Published var recipes: [Recipe] = []
+    @Published var selectedRecipeDetails: RecipeDetails?
 
     init(recipeService: RecipeServiceProtocol = RecipeAPIService()) {
         self.recipeService = recipeService
@@ -22,4 +24,12 @@ class RecipeViewModel: ObservableObject {
             }
         }
     }
+    
+    func fetchRecipeDetails(for recipeId: Int) {
+            recipeService.fetchRecipeDetails(for: recipeId) { result in
+                DispatchQueue.main.async {
+                    self.selectedRecipeDetails = result
+                }
+            }
+        }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeView: View {
     @ObservedObject var viewModel: RecipeViewModel
+    @State private var isPresented = false
     
     var body: some View {
         NavigationView {
@@ -16,6 +17,12 @@ struct RecipeView: View {
                 VStack(spacing: 16) {
                     ForEach(viewModel.recipes) { recipe in
                         RecipeItemView(recipe: recipe)
+                            .onTapGesture {
+                                isPresented.toggle()
+                            }
+                            .fullScreenCover(isPresented: $isPresented) {
+                                RecipeDetailsView(recipeId: recipe.id, viewModel: viewModel)
+                            }
                     }
                 }
                 .padding()
@@ -25,34 +32,6 @@ struct RecipeView: View {
                 viewModel.fetchRecipes()
             }
         }
-    }
-}
-
-struct RecipeItemView: View {
-    let recipe: Recipe
-    
-    var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            AsyncImageView(url: URL(string: recipe.image)!)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            GeometryReader { geometry in
-                VStack(alignment: .leading) {
-                    Spacer()
-                    Text(recipe.title)
-                        .font(.title)
-                        .lineLimit(2)
-                        .padding(8)
-                        .padding(.leading, 10)
-                        .frame(width: geometry.size.width, alignment: .leading)
-                        .background(
-                            BlurView(style: .dark)
-                        )
-                        .foregroundColor(.white)
-                }
-            }
-        }
-        .cornerRadius(10)
     }
 }
 
