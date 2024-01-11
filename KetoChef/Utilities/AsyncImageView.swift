@@ -16,7 +16,7 @@ struct AsyncImageView: View {
     }
 
     var body: some View {
-        Image(uiImage: imageLoader.image ?? UIImage(systemName: "globe")!)
+        Image(uiImage: (imageLoader.image ?? UIImage(named: "steak"))!)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .onAppear {

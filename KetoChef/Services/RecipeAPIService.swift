@@ -8,7 +8,7 @@
 import Foundation
 
 class RecipeAPIService: RecipeServiceProtocol {
-    func fetchRecipes(completion: @escaping ([Recipe]?) -> Void) {
+    func fetchRecipes(completion: @escaping (RecipeResponse?) -> Void) {
         if let apiKey = ConfigReader.readApiKey() {
             guard let url = URL(string: "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&apiKey=\(apiKey)") else {
                 print("Invalid URL")
@@ -24,10 +24,10 @@ class RecipeAPIService: RecipeServiceProtocol {
                 if let data = data {
                     do {
                         let decoder = JSONDecoder()
-                        let result = try decoder.decode([Recipe].self, from: data)
+                        let result = try decoder.decode(RecipeResponse.self, from: data)
                         completion(result)
                     } catch {
-                        print("Error decoding JSON: \(error)")
+                        print("Error from fetchRecipes decoding JSON: \(error)")
                     }
                 }
             }
@@ -40,7 +40,7 @@ class RecipeAPIService: RecipeServiceProtocol {
     
     func fetchRecipeDetails(for recipeId: Int, completion: @escaping (RecipeDetails?) -> Void) {
         if let apiKey = ConfigReader.readApiKey() {
-            guard let url = URL(string: "https://api.spoonacular.com/recipes/\(recipeId)/information?includeNutrition=true&apiKey=\(apiKey)") else {
+            guard let url = URL(string: "https://api.spoonacular.com/recipes/\(recipeId)/information?&apiKey=\(apiKey)") else {
                 print("Invalid URL")
                 completion(nil)
                 return
@@ -59,7 +59,7 @@ class RecipeAPIService: RecipeServiceProtocol {
                         let result = try decoder.decode(RecipeDetails.self, from: data)
                         completion(result)
                     } catch {
-                        print("Error decoding JSON: \(error)")
+                        print("Error from fetchRecipeDetails decoding JSON: \(error)")
                         completion(nil)
                     }
                 }

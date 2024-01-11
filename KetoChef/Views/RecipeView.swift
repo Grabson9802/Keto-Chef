@@ -9,9 +9,10 @@ import SwiftUI
 
 struct RecipeView: View {
     @ObservedObject var viewModel: RecipeViewModel
-    @State private var isPresented = false
+    @State private var selectedRecipe: Recipe?
     @State private var isSearching = false
     @State private var searchText = ""
+    @State private var isLoading = false
     
     var body: some View {
         NavigationView {
@@ -25,14 +26,21 @@ struct RecipeView: View {
                     ForEach(viewModel.filteredRecipes) { recipe in
                         RecipeItemView(recipe: recipe)
                             .onTapGesture {
-                                isPresented.toggle()
+                                selectedRecipe = recipe
                             }
-                            .fullScreenCover(isPresented: $isPresented) {
+                            .fullScreenCover(item: $selectedRecipe) { recipe in
                                 RecipeDetailsView(recipeId: recipe.id, viewModel: viewModel)
                             }
                     }
                 }
                 .padding()
+                
+                if isLoading {
+                    VStack {
+                        ProgressView("Loading...")
+                            .padding(.top, UIScreen.main.bounds.height / 4)
+                    }
+                }
             }
             .navigationBarTitle("Keto Chef")
             .navigationBarItems(trailing:
@@ -53,7 +61,10 @@ struct RecipeView: View {
                     .cornerRadius(50)
             })
             .onAppear {
-                viewModel.fetchRecipes()
+                isLoading = true
+                viewModel.fetchRecipes {
+                    isLoading = false
+                }
             }
         }
     }

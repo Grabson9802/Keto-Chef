@@ -11,7 +11,7 @@ class AppCoordinator: ObservableObject {
     @Published var currentView: AnyView
 
     init() {
-        let recipeViewModel = RecipeViewModel(recipeService: RecipeMockService())
+        let recipeViewModel = RecipeViewModel(recipeService: RecipeAPIService())
         let recipeView = RecipeView(viewModel: recipeViewModel)
         currentView = AnyView(recipeView)
     }

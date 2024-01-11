@@ -18,6 +18,7 @@ class RecipeViewModel: ObservableObject {
             performSearch(with: searchQuery)
         }
     }
+    @Published var isLoading: Bool = false // Added loading state
     
     init(recipeService: RecipeServiceProtocol = RecipeAPIService()) {
         self.recipeService = recipeService
@@ -34,20 +35,26 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func fetchRecipes() {
+    func fetchRecipes(completion: (() -> Void)? = nil) {
+        isLoading = true // Set loading state to true
         recipeService.fetchRecipes { result in
             DispatchQueue.main.async {
-                self.recipes = result ?? []
+                self.recipes = result?.results ?? []
                 self.filteredRecipes = self.recipes
+                self.isLoading = false // Set loading state to false when fetching is done
+                completion?()
             }
         }
     }
     
     func fetchRecipeDetails(for recipeId: Int) {
+        isLoading = true // Set loading state to true
         recipeService.fetchRecipeDetails(for: recipeId) { result in
             DispatchQueue.main.async {
                 self.selectedRecipeDetails = result
+                self.isLoading = false // Set loading state to false when fetching is done
             }
         }
     }
 }
+
