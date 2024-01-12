@@ -40,6 +40,9 @@ struct RecipeDetailsView: View {
                     VStack {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 10) {
+                                
+                                Spacer()
+                                
                                 Text(details.title)
                                     .font(.title)
                                     .bold()
@@ -94,7 +97,8 @@ struct RecipeDetailsView: View {
                                 }
                             }
                         }
-                        .padding()
+                        .frame(width: geometry.size.width - 80)
+                        .cornerRadius(10)
                         
                         Button {
                             isCookingStepsPresented.toggle()
@@ -108,6 +112,7 @@ struct RecipeDetailsView: View {
                                     CookingStepsView(viewModel: viewModel, recipeId: recipeId)
                                 }
                         }
+                        .padding(.top, 8)
                     }
                     .background(Color.white)
                     .cornerRadius(10)

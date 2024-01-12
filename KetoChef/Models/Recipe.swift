@@ -7,6 +7,7 @@
 
 struct RecipeResponse: Decodable {
     let results: [Recipe]
+    let totalResults: Int
 }
 
 struct Recipe: Identifiable, Decodable {

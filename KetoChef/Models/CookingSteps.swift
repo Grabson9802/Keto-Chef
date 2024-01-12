@@ -7,19 +7,17 @@
 
 import Foundation
 
-struct CookingSteps: Decodable, Identifiable {
-    let id = UUID()
+struct CookingSteps: Decodable {
     let name: String
     let steps: [Steps]
     
-    struct Steps: Decodable, Identifiable {
-        let id = UUID()
+    struct Steps: Decodable {
         let number: Int
         let step: String
         let ingredients: [Ingredients]
         
-        struct Ingredients: Decodable, Identifiable {
-            let id = UUID()
+        struct Ingredients: Decodable {
+            var id: Int
             let name: String
             let image: String
         }

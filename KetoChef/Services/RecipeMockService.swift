@@ -15,7 +15,7 @@ class RecipeMockService: RecipeServiceProtocol {
                                                 .init(number: 1,
                                                       step: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                                                       ingredients: [
-                                                        .init(name: "Name",
+                                                        .init(id: 0, name: "Name",
                                                               image: "https://via.placeholder.com/600x400")
                                                       ])
                                              ])]
@@ -72,7 +72,7 @@ class RecipeMockService: RecipeServiceProtocol {
         completion(mockRecipeDetailed)
     }
     
-    func fetchRecipes(completion: @escaping (RecipeResponse?) -> Void) {
+    func fetchRecipes(offset: Int = 0, completion: @escaping (RecipeResponse?) -> Void) {
         let mockRecipes = RecipeResponse(results: [
             Recipe(id: 1, title: "Mock Recipe 1", image: "system"),
             Recipe(id: 2, title: "Mock Recipe 2", image: "system"),
@@ -84,7 +84,7 @@ class RecipeMockService: RecipeServiceProtocol {
             Recipe(id: 8, title: "Mock Recipe 8", image: "system"),
             Recipe(id: 9, title: "Mock Recipe 9", image: "system"),
             Recipe(id: 10, title: "Mock Recipe 10", image: "system"),
-        ])
+        ], totalResults: 220)
         
         completion(mockRecipes)
     }

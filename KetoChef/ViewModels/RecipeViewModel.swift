@@ -35,6 +35,10 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
+    func hasEnoughData() -> Bool {
+        recipes.count == 100 ? true : false
+    }
+    
     func performSearch(with query: String) {
         if query.isEmpty {
             filteredRecipes = recipes
@@ -45,9 +49,9 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func fetchRecipes(completion: (() -> Void)? = nil) {
+    func fetchRecipes(offset: Int, completion: (() -> Void)? = nil) {
         isLoading = true
-        recipeService.fetchRecipes { response in
+        recipeService.fetchRecipes(offset: offset) { response in
             DispatchQueue.main.async {
                 self.recipes = response?.results ?? []
                 self.filteredRecipes = self.recipes

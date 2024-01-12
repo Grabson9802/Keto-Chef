@@ -13,6 +13,7 @@ struct RecipeView: View {
     @State private var isSearching = false
     @State private var searchText = ""
     @State private var isLoading = false
+    @State private var currentPage: Int = 0
     
     var body: some View {
         NavigationView {
@@ -34,6 +35,32 @@ struct RecipeView: View {
                     }
                 }
                 .padding()
+                
+                HStack {
+                    Button {
+                        if currentPage > 0 {
+                            currentPage -= 1
+                        }
+                        viewModel.fetchRecipes(offset: currentPage)
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .padding()
+                            .foregroundColor(currentPage == 0 ? .gray : .black)
+                    }
+                    
+                    Text("Page \(currentPage + 1)")
+                    
+                    Button {
+                        if viewModel.hasEnoughData() {
+                            currentPage += 1
+                            viewModel.fetchRecipes(offset: currentPage)
+                        }
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .padding()
+                            .foregroundColor(viewModel.hasEnoughData() ? .black : .gray)
+                    }
+                }
                 
                 if isLoading {
                     VStack {
@@ -63,7 +90,7 @@ struct RecipeView: View {
             })
             .onAppear {
                 isLoading = true
-                viewModel.fetchRecipes {
+                viewModel.fetchRecipes(offset: currentPage) {
                     isLoading = false
                 }
             }
@@ -83,7 +110,7 @@ struct RecipeItemView: View {
                 VStack(alignment: .leading) {
                     Spacer()
                     Text(recipe.title)
-                        .font(.title)
+                        .font(.headline)
                         .lineLimit(2)
                         .padding(8)
                         .padding(.leading, 10)
