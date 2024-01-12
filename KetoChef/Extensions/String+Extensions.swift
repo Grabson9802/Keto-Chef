@@ -27,3 +27,9 @@ extension String {
         self = capitalizingFirstLetter()
     }
 }
+
+extension String {
+    func removeAmpersandEncoding() -> String {
+        return self.replacingOccurrences(of: "&amp;", with: "&", options: .literal, range: nil)
+    }
+}

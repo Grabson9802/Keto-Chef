@@ -9,10 +9,12 @@ import SwiftUI
 
 struct RecipeDetailsView: View {
     @Environment(\.dismiss) var dismiss
-    let recipeId: Int
     @ObservedObject var viewModel: RecipeViewModel
     @State private var isSummaryTextExpanded = false
     @State private var isLoading = false
+    @State private var isCookingStepsPresented = false
+
+    let recipeId: Int
     
     var body: some View {
         GeometryReader { geometry in
@@ -95,13 +97,16 @@ struct RecipeDetailsView: View {
                         .padding()
                         
                         Button {
-                            
+                            isCookingStepsPresented.toggle()
                         } label: {
                             Text("Start Cooking")
                                 .foregroundColor(.black)
                                 .padding()
                                 .frame(maxWidth: .infinity)
                                 .background(Color.yellow)
+                                .fullScreenCover(isPresented: $isCookingStepsPresented) {
+                                    CookingStepsView(viewModel: viewModel, recipeId: recipeId)
+                                }
                         }
                     }
                     .background(Color.white)
@@ -142,5 +147,5 @@ struct RecipeDetailsView: View {
 
 
 #Preview {
-    RecipeDetailsView(recipeId: 0, viewModel: RecipeViewModel(recipeService: RecipeMockService()))
+    RecipeDetailsView(viewModel: RecipeViewModel(recipeService: RecipeMockService()), recipeId: 0)
 }

@@ -29,7 +29,7 @@ struct RecipeView: View {
                                 selectedRecipe = recipe
                             }
                             .fullScreenCover(item: $selectedRecipe) { recipe in
-                                RecipeDetailsView(recipeId: recipe.id, viewModel: viewModel)
+                                RecipeDetailsView(viewModel: viewModel, recipeId: recipe.id)
                             }
                     }
                 }

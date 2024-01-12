@@ -5,14 +5,14 @@
 //  Created by Krystian Grabowy on 10/01/2024.
 //
 
-struct RecipeDetails: Identifiable, Decodable {
+struct RecipeDetails: Decodable {
     let id: Int
     let title: String
     let image: String
     let summary: String
     let extendedIngredients: [Ingredient]
     
-    struct Ingredient: Identifiable, Decodable {
+    struct Ingredient: Decodable {
         let id: Int
         let name: String
         let amount: Double

@@ -19,10 +19,20 @@ class RecipeViewModel: ObservableObject {
         }
     }
     @Published var isLoading: Bool = false
+    @Published var cookingSteps: [CookingSteps] = []
     
     init(recipeService: RecipeServiceProtocol = RecipeAPIService()) {
         self.recipeService = recipeService
         self.filteredRecipes = recipes
+    }
+    
+    func fetchCookingSteps(for recipeId: Int, completion: (() -> Void)? = nil) {
+        recipeService.fetchAnalyzedInstructions(for: recipeId) { cookingSteps in
+            DispatchQueue.main.async {
+                self.cookingSteps = cookingSteps ?? []
+                completion?()
+            }
+        }
     }
     
     func performSearch(with query: String) {

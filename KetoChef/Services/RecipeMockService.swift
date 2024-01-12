@@ -9,6 +9,19 @@ import Foundation
 
 class RecipeMockService: RecipeServiceProtocol {
     
+    func fetchAnalyzedInstructions(for recipeId: Int, completion: @escaping ([CookingSteps]?) -> Void) {
+        let mockCookingSteps = [CookingSteps(name: "Step 1",
+                                             steps: [
+                                                .init(number: 1,
+                                                      step: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                                                      ingredients: [
+                                                        .init(name: "Name",
+                                                              image: "https://via.placeholder.com/600x400")
+                                                      ])
+                                             ])]
+        completion(mockCookingSteps)
+    }
+    
     func fetchRecipeDetails(for recipeId: Int, completion: @escaping (RecipeDetails?) -> Void) {
         let mockRecipeDetailed = RecipeDetails(id: 0,
                                                title: "Keto Pizza",

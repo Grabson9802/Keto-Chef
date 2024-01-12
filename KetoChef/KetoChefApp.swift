@@ -12,7 +12,7 @@ struct KetoChefApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RecipeView(viewModel: RecipeViewModel(recipeService: RecipeMockService()))
+            RecipeView(viewModel: RecipeViewModel(recipeService: RecipeAPIService()))
         }
     }
 }
