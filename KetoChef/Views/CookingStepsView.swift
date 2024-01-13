@@ -36,14 +36,31 @@ struct CookingStepsView: View {
                     }
                     
                     ForEach(viewModel.cookingSteps, id: \.name) { cookingStep in
+                        
+                        VStack(alignment: .leading) {
+                            Text(cookingStep.name)
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.leading)
+                        }
+                        
                         ForEach(cookingStep.steps, id: \.step) { step in
                             VStack(alignment: .leading) {
-                                Text("Step \(step.number)")
-                                    .font(.headline)
-                                    .foregroundColor(.black)
-                                Text(step.step.removeAmpersandEncoding())
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.leading)
+                                HStack {
+                                    Text("Step \(step.number)")
+                                        .font(.headline)
+                                        .foregroundColor(.black)
+                                    
+                                    Spacer()
+                                }
+                                
+                                HStack {
+                                    Text(step.step.removeAmpersandEncoding())
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.leading)
+                                    
+                                    Spacer()
+                                }
                             }
                             .frame(maxWidth: .infinity)
                             .padding(8)

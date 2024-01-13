@@ -10,6 +10,7 @@ struct RecipeDetails: Decodable {
     let title: String
     let image: String
     let summary: String
+    let aggregateLikes: Int
     let extendedIngredients: [Ingredient]
     
     struct Ingredient: Decodable {

@@ -10,7 +10,7 @@ import Foundation
 class RecipeAPIService: RecipeServiceProtocol {
     func fetchRecipes(offset: Int = 0, completion: @escaping (RecipeResponse?) -> Void) {
         if let apiKey = ConfigReader.readApiKey() {
-            guard let url = URL(string: "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&offset=\(offset * 100)&number=100&apiKey=\(apiKey)") else {
+            guard let url = URL(string: "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&sort=popularity&sortDirection=desc&offset=\(offset * 100)&number=100&apiKey=\(apiKey)") else {
                 print("Invalid URL")
                 return
             }

@@ -13,7 +13,8 @@ struct RecipeDetailsView: View {
     @State private var isSummaryTextExpanded = false
     @State private var isLoading = false
     @State private var isCookingStepsPresented = false
-
+    @State private var isRecipeFavorite = false
+    
     let recipeId: Int
     
     var body: some View {
@@ -22,83 +23,97 @@ struct RecipeDetailsView: View {
                 if let details = viewModel.selectedRecipeDetails {
                     if let url = URL(string: details.image) {
                         AsyncImageView(url: url)
-                            .scaledToFill()
                             .frame(width: geometry.size.width, height: geometry.size.height / 2)
-                            .clipped()
                             .edgesIgnoringSafeArea(.top)
-                            .overlay(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.white, .clear]),
-                                    startPoint: .bottom,
-                                    endPoint: .center
-                                )
-                                .opacity(1)
-                            )
                             .id(UUID())
                     }
                     
                     VStack {
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: 10) {
+                        ZStack(alignment: .top) {
+                            HStack {
                                 
                                 Spacer()
                                 
-                                Text(details.title)
-                                    .font(.title)
-                                    .bold()
-                                
-                                Text(details.summary.removeHTMLTagsAndBraces())
-                                    .foregroundColor(.secondary)
-                                    .lineLimit(isSummaryTextExpanded ? nil : 3)
-                                    .overlay(
-                                        Text(isSummaryTextExpanded ? "less" : "more")
-                                            .foregroundColor(.primary)
-                                            .onTapGesture {
-                                                withAnimation {
-                                                    isSummaryTextExpanded.toggle()
+                                Button {
+                                    isRecipeFavorite.toggle()
+                                } label: {
+                                    Image(systemName: isRecipeFavorite ? "star.fill" : "star")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(isRecipeFavorite ? .yellow : .gray)
+                                        .padding(8)
+                                }
+                                .background(
+                                    Circle()
+                                        .foregroundColor(.yellow.opacity(0.3))
+                                        .frame(width: 80, height: 80)
+                                        .offset(x: 15, y: -15)
+                                    )
+                            }
+                            
+                            ScrollView {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    
+                                    Spacer()
+                                    
+                                    Text(details.title)
+                                        .font(.title)
+                                        .bold()
+                                    
+                                    Text(details.summary.removeHTMLTagsAndBraces())
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(isSummaryTextExpanded ? nil : 3)
+                                        .overlay(
+                                            Text(isSummaryTextExpanded ? "less" : "more")
+                                                .foregroundColor(.primary)
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        isSummaryTextExpanded.toggle()
+                                                    }
+                                                }
+                                                .padding(.bottom, -.infinity),
+                                            alignment: .bottomTrailing
+                                        )
+                                        .onTapGesture {
+                                            withAnimation {
+                                                isSummaryTextExpanded.toggle()
+                                            }
+                                        }
+                                    
+                                    if isSummaryTextExpanded {
+                                        TextEditor(text: .constant(details.summary))
+                                            .disabled(true)
+                                            .opacity(0)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Text("Ingredients")
+                                        .font(.headline)
+                                        .bold()
+                                    
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .foregroundColor(.gray.opacity(0.1))
+                                        VStack(alignment: .leading, spacing: 10) {
+                                            ForEach(details.extendedIngredients, id: \.id) { ingredient in
+                                                HStack {
+                                                    Text("\(ingredient.name.capitalizingFirstLetter())")
+                                                    
+                                                    Spacer()
+                                                    
+                                                    Text("\(ingredient.amount.roundedWithoutZeros()) \(ingredient.measures.metric.unitLong)")
                                                 }
                                             }
-                                            .padding(.bottom, -.infinity),
-                                        alignment: .bottomTrailing
-                                    )
-                                    .onTapGesture {
-                                        withAnimation {
-                                            isSummaryTextExpanded.toggle()
                                         }
+                                        .padding()
                                     }
-                                
-                                if isSummaryTextExpanded {
-                                    TextEditor(text: .constant(details.summary))
-                                        .disabled(true)
-                                        .opacity(0)
-                                }
-                                
-                                Spacer()
-                                
-                                Text("Ingredients")
-                                    .font(.headline)
-                                    .bold()
-                                
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .foregroundColor(.gray.opacity(0.1))
-                                    VStack(alignment: .leading, spacing: 10) {
-                                        ForEach(details.extendedIngredients, id: \.id) { ingredient in
-                                            HStack {
-                                                Text("\(ingredient.name.capitalizingFirstLetter())")
-                                                
-                                                Spacer()
-                                                
-                                                Text("\(ingredient.amount.roundedWithoutZeros()) \(ingredient.measures.metric.unitLong)")
-                                            }
-                                        }
-                                    }
-                                    .padding()
                                 }
                             }
+                            .frame(width: geometry.size.width - 80)
+                            .cornerRadius(10)
                         }
-                        .frame(width: geometry.size.width - 80)
-                        .cornerRadius(10)
                         
                         Button {
                             isCookingStepsPresented.toggle()
@@ -123,7 +138,7 @@ struct RecipeDetailsView: View {
                     .offset(y: -geometry.size.height / 8)
                 } else {
                     if isLoading {
-                            ProgressView("Loading...")
+                        ProgressView("Loading...")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }

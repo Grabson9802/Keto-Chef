@@ -16,7 +16,34 @@ struct RecipeView: View {
     @State private var currentPage: Int = 0
     
     var body: some View {
-        NavigationView {
+        VStack(spacing: 0) {
+            HStack {
+                Text("Keto Chef")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                Spacer()
+                
+                Button {
+                    withAnimation {
+                        isSearching.toggle()
+                        if !isSearching {
+                            viewModel.performSearch(with: searchText)
+                        } else {
+                            viewModel.searchQuery = ""
+                        }
+                    }
+                } label: {
+                    Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.black)
+                        .background(Color.black.opacity(0.15))
+                        .cornerRadius(50)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+            
             ScrollView {
                 if isSearching {
                     TextField("Search recipes...", text: $viewModel.searchQuery)
@@ -35,6 +62,8 @@ struct RecipeView: View {
                     }
                 }
                 .padding()
+                
+                Spacer()
                 
                 HStack {
                     Button {
@@ -70,24 +99,6 @@ struct RecipeView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .navigationBarTitle("Keto Chef")
-            .navigationBarItems(trailing:
-                                    Button {
-                withAnimation {
-                    isSearching.toggle()
-                    if !isSearching {
-                        viewModel.performSearch(with: searchText)
-                    } else {
-                        viewModel.searchQuery = ""
-                    }
-                }
-            } label: {
-                Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
-                    .frame(width: 36, height: 36)
-                    .foregroundColor(.black)
-                    .background(Color.black.opacity(0.15))
-                    .cornerRadius(50)
-            })
             .onAppear {
                 isLoading = true
                 viewModel.fetchRecipes(offset: currentPage) {
