@@ -36,6 +36,7 @@ struct RecipeDetailsView: View {
                                 
                                 Button {
                                     isRecipeFavorite.toggle()
+                                    FavoritesManager.shared.toggleFavorite(recipeId: recipeId)
                                 } label: {
                                     Image(systemName: isRecipeFavorite ? "star.fill" : "star")
                                         .resizable()
@@ -145,6 +146,7 @@ struct RecipeDetailsView: View {
             }
             .onAppear {
                 isLoading = true
+                isRecipeFavorite = FavoritesManager.shared.isRecipeFavorite(recipeId: recipeId)
                 viewModel.fetchRecipeDetails(for: recipeId) {
                     isLoading = false
                 }

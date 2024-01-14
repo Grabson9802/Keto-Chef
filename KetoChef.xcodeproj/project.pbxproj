@@ -27,6 +27,7 @@
 		664897F62B50196D0049F38A /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664897F52B50196D0049F38A /* Double+Extensions.swift */; };
 		664897F82B5147520049F38A /* CookingStepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664897F72B5147510049F38A /* CookingStepsView.swift */; };
 		664897FA2B514B190049F38A /* CookingSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664897F92B514B190049F38A /* CookingSteps.swift */; };
+		664897FC2B5351470049F38A /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664897FB2B5351470049F38A /* FavoritesManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		664897F52B50196D0049F38A /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		664897F72B5147510049F38A /* CookingStepsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookingStepsView.swift; sourceTree = "<group>"; };
 		664897F92B514B190049F38A /* CookingSteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookingSteps.swift; sourceTree = "<group>"; };
+		664897FB2B5351470049F38A /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				664897DA2B4ED2EE0049F38A /* ConfigReader.swift */,
 				664897D62B4ED2BD0049F38A /* AsyncImageView.swift */,
 				664897D82B4ED2D80049F38A /* BlurView.swift */,
+				664897FB2B5351470049F38A /* FavoritesManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				664897D92B4ED2D80049F38A /* BlurView.swift in Sources */,
 				664897F82B5147520049F38A /* CookingStepsView.swift in Sources */,
 				664897E22B4ED34B0049F38A /* RecipeServiceProtocol.swift in Sources */,
+				664897FC2B5351470049F38A /* FavoritesManager.swift in Sources */,
 				664897C22B4ED19D0049F38A /* KetoChefApp.swift in Sources */,
 				664897DB2B4ED2EE0049F38A /* ConfigReader.swift in Sources */,
 				664897E02B4ED3360049F38A /* RecipeMockService.swift in Sources */,
