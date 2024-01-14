@@ -27,16 +27,48 @@ class RecipeViewModel: ObservableObject {
     }
     
     func fetchCookingSteps(for recipeId: Int, completion: (() -> Void)? = nil) {
-        recipeService.fetchAnalyzedInstructions(for: recipeId) { cookingSteps in
+        recipeService.fetchAnalyzedInstructions(for: recipeId) { result in
             DispatchQueue.main.async {
-                self.cookingSteps = cookingSteps ?? []
+                switch result {
+                case .success(let cookingSteps):
+                    self.cookingSteps = cookingSteps
+                case .failure(let error):
+                    print("Error fetching cooking steps: \(error)")
+                }
                 completion?()
             }
         }
     }
     
-    func hasEnoughData() -> Bool {
-        recipes.count == 100 ? true : false
+    func fetchRecipeDetails(for recipeId: Int, completion: (() -> Void)? = nil) {
+        recipeService.fetchRecipeDetails(for: recipeId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let selectedRecipeDetails):
+                    self.selectedRecipeDetails = selectedRecipeDetails
+                case .failure(let error):
+                    print("Error fetching recipe details: \(error)")
+                }
+                completion?()
+            }
+        }
+    }
+    
+    func fetchRecipes(offset: Int, completion: (() -> Void)? = nil) {
+        isLoading = true
+        recipeService.fetchRecipes(offset: offset) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let recipes):
+                    self.recipes = recipes.results
+                    self.filteredRecipes = self.recipes
+                    self.isLoading = false
+                case .failure(let error):
+                    print("Error fetching recipes: \(error)")
+                }
+                completion?()
+            }
+        }
     }
     
     func performSearch(with query: String) {
@@ -49,25 +81,8 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func fetchRecipes(offset: Int, completion: (() -> Void)? = nil) {
-        isLoading = true
-        recipeService.fetchRecipes(offset: offset) { response in
-            DispatchQueue.main.async {
-                self.recipes = response?.results ?? []
-                self.filteredRecipes = self.recipes
-                self.isLoading = false
-                completion?()
-            }
-        }
-    }
-    
-    func fetchRecipeDetails(for recipeId: Int, completion: (() -> Void)? = nil) {
-        recipeService.fetchRecipeDetails(for: recipeId) { result in
-            DispatchQueue.main.async {
-                self.selectedRecipeDetails = result
-                completion?()
-            }
-        }
+    func hasEnoughDataToChangePage() -> Bool {
+        recipes.count == 100
     }
 }
 

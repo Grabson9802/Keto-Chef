@@ -53,7 +53,7 @@ struct RecipeDetailsView: View {
                                     )
                             }
                             
-                            ScrollView {
+                            ScrollView(showsIndicators: false) {
                                 VStack(alignment: .leading, spacing: 10) {
                                     
                                     Spacer()
@@ -135,7 +135,6 @@ struct RecipeDetailsView: View {
                     .padding(.horizontal)
                     .frame(height: geometry.size.height / 1.7)
                     .shadow(radius: 5)
-                    .scrollIndicators(.hidden)
                     .offset(y: -geometry.size.height / 8)
                 } else {
                     if isLoading {

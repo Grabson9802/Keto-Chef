@@ -16,11 +16,20 @@ struct AsyncImageView: View {
     }
     
     var body: some View {
-        Image(uiImage: (imageLoader.image ?? UIImage(named: "steak"))!)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .onAppear {
-                imageLoader.loadImage(from: url)
+        Group {
+            if let image = imageLoader.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .onAppear {
+                        imageLoader.loadImage(from: url)
+                    }
+            } else {
+                ProgressView()
             }
+        }
+        .onAppear {
+            imageLoader.loadImage(from: url)
+        }
     }
 }

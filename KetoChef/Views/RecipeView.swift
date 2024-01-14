@@ -44,12 +44,13 @@ struct RecipeView: View {
             .padding(.horizontal)
             .padding(.bottom, 8)
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 if isSearching {
                     TextField("Search recipes...", text: $viewModel.searchQuery)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                 }
+                
                 VStack(spacing: 16) {
                     ForEach(viewModel.filteredRecipes) { recipe in
                         RecipeItemView(recipe: recipe)
@@ -80,14 +81,14 @@ struct RecipeView: View {
                     Text("Page \(currentPage + 1)")
                     
                     Button {
-                        if viewModel.hasEnoughData() {
+                        if viewModel.hasEnoughDataToChangePage() {
                             currentPage += 1
                             viewModel.fetchRecipes(offset: currentPage)
                         }
                     } label: {
                         Image(systemName: "chevron.right")
                             .padding()
-                            .foregroundColor(viewModel.hasEnoughData() ? .black : .gray)
+                            .foregroundColor(viewModel.hasEnoughDataToChangePage() ? .black : .gray)
                     }
                 }
                 
@@ -98,7 +99,6 @@ struct RecipeView: View {
                     }
                 }
             }
-            .scrollIndicators(.hidden)
             .onAppear {
                 isLoading = true
                 viewModel.fetchRecipes(offset: currentPage) {
@@ -114,22 +114,24 @@ struct RecipeItemView: View {
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            AsyncImageView(url: URL(string: recipe.image)!)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            GeometryReader { geometry in
-                VStack(alignment: .leading) {
-                    Spacer()
-                    Text(recipe.title)
-                        .font(.headline)
-                        .lineLimit(2)
-                        .padding(8)
-                        .padding(.leading, 10)
-                        .frame(width: geometry.size.width, alignment: .leading)
-                        .background(
-                            BlurView(style: .dark)
-                        )
-                        .foregroundColor(.white)
+            if let url = URL(string: recipe.image) {
+                AsyncImageView(url: url)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                GeometryReader { geometry in
+                    VStack(alignment: .leading) {
+                        Spacer()
+                        Text(recipe.title)
+                            .font(.headline)
+                            .lineLimit(2)
+                            .padding(8)
+                            .padding(.leading, 10)
+                            .frame(width: geometry.size.width, alignment: .leading)
+                            .background(
+                                BlurView(style: .dark)
+                            )
+                            .foregroundColor(.white)
+                    }
                 }
             }
         }
