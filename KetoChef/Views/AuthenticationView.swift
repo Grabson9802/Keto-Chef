@@ -8,42 +8,68 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @ObservedObject private var viewModel = AuthenticationViewModel()
+    @ObservedObject var viewModel: AuthenticationViewModel
     
     var body: some View {
         VStack {
             TextField("Email", text: $viewModel.email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
-            SecureField("Password", text: $viewModel.password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
+
+            if viewModel.authenticationState != .forgotPassword {
+                SecureField("Password", text: $viewModel.password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+            }
+
             Button(action: {
                 viewModel.authenticate()
             }) {
-                Text(viewModel.isRegistering ? "Register" : "Login")
+                Text(viewModel.authenticationState == .login ? "Login" : (viewModel.authenticationState == .forgotPassword ? "Send Reminder" : "Register"))
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.blue)
                     .foregroundColor(.white)
+                    .cornerRadius(8)
             }
-            
+
             Button(action: {
-                viewModel.isRegistering.toggle()
+                viewModel.authenticationState = viewModel.authenticationState == .login ? .register : .login
             }) {
-                Text(viewModel.isRegistering ? "Already have an account? Login" : "Don't have an account? Register")
+                Text(viewModel.authenticationState == .login ? "Don't have an account? Register" : "Already have an account? Login")
                     .foregroundColor(.blue)
                     .padding(.top)
             }
-            
-            if let error = viewModel.authenticationError {
-                Text(error)
+
+            Button(action: {
+                viewModel.authenticationState = .forgotPassword
+            }) {
+                Text("Forgot Password?")
                     .foregroundColor(.red)
+                    .padding(.top)
+            }
+
+            Spacer()
+
+            Button(action: {
+                
+            }) {
+                Text("Unlock Premium Experience")
+                    .foregroundColor(.white)
                     .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .cornerRadius(8)
             }
         }
         .padding()
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("Authentication"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
 }
+
+#Preview {
+    AuthenticationView(viewModel: AuthenticationViewModel())
+}
+

@@ -65,6 +65,8 @@
 		664898432B543D6A0049F38A /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 664898422B543D6A0049F38A /* FirebaseRemoteConfigSwift */; };
 		664898452B543D6A0049F38A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 664898442B543D6A0049F38A /* FirebaseStorage */; };
 		664898472B543D6A0049F38A /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 664898462B543D6A0049F38A /* FirebaseStorageCombine-Community */; };
+		664898492B5451EB0049F38A /* UserSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664898482B5451EB0049F38A /* UserSettingsView.swift */; };
+		6648984B2B54520F0049F38A /* UserSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6648984A2B54520F0049F38A /* UserSettingsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,8 @@
 		664898012B5436F00049F38A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6648980E2B5439A00049F38A /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		664898102B543BBE0049F38A /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		664898482B5451EB0049F38A /* UserSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsView.swift; sourceTree = "<group>"; };
+		6648984A2B54520F0049F38A /* UserSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +195,7 @@
 				664897F72B5147510049F38A /* CookingStepsView.swift */,
 				664897FD2B54149D0049F38A /* FavoritesView.swift */,
 				6648980E2B5439A00049F38A /* AuthenticationView.swift */,
+				664898482B5451EB0049F38A /* UserSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 				664897D22B4ED2710049F38A /* RecipeViewModel.swift */,
 				664897FF2B54152E0049F38A /* FavoritesViewModel.swift */,
 				664898102B543BBE0049F38A /* AuthenticationViewModel.swift */,
+				6648984A2B54520F0049F38A /* UserSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -364,6 +370,7 @@
 			files = (
 				664897C42B4ED19D0049F38A /* RecipeView.swift in Sources */,
 				664897F62B50196D0049F38A /* Double+Extensions.swift in Sources */,
+				6648984B2B54520F0049F38A /* UserSettingsViewModel.swift in Sources */,
 				664897D32B4ED2710049F38A /* RecipeViewModel.swift in Sources */,
 				664897E42B4ED36B0049F38A /* ImageLoader.swift in Sources */,
 				664898112B543BBE0049F38A /* AuthenticationViewModel.swift in Sources */,
@@ -379,6 +386,7 @@
 				664897ED2B4EF94D0049F38A /* RecipeDetails.swift in Sources */,
 				664897FA2B514B190049F38A /* CookingSteps.swift in Sources */,
 				664897DE2B4ED31E0049F38A /* RecipeAPIService.swift in Sources */,
+				664898492B5451EB0049F38A /* UserSettingsView.swift in Sources */,
 				664897F42B5010DA0049F38A /* String+Extensions.swift in Sources */,
 				664897D72B4ED2BD0049F38A /* AsyncImageView.swift in Sources */,
 				6648980F2B5439A00049F38A /* AuthenticationView.swift in Sources */,
