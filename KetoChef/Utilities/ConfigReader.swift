@@ -8,6 +8,9 @@
 import Foundation
 
 class ConfigReader {
+    
+    private init() {}
+    
     static func readApiKey() -> String? {
         if let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
            let configDict = NSDictionary(contentsOfFile: path),

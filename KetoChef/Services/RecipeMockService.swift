@@ -36,7 +36,8 @@ class RecipeMockService: RecipeServiceProtocol {
         let mockRecipeDetailed = RecipeDetails(id: 0,
                                                title: "Keto Pizza",
                                                image: "https://via.placeholder.com/600x400",
-                                               summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", aggregateLikes: 100,
+                                               summary: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", 
+                                               aggregateLikes: 100,
                                                extendedIngredients: [
                                                 .init(id: 0,
                                                       name: "Cheese cheddar",

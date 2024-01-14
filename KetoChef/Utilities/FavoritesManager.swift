@@ -9,24 +9,46 @@ import Foundation
 
 class FavoritesManager {
     static let shared = FavoritesManager()
-    
+
+    private let favoritesKey = "favorites"
     private let userDefaults = UserDefaults.standard
-    private let favoritesKey = "FavoriteRecipes"
     
-    func toggleFavorite(recipeId: Int) {
-        var favorites = userDefaults.array(forKey: favoritesKey) as? [Int] ?? []
-        
-        if let index = favorites.firstIndex(of: recipeId) {
+    private init() {}
+
+    func getFavorites() -> [RecipeDetails] {
+        if let data = userDefaults.data(forKey: favoritesKey) {
+            do {
+                let decoder = JSONDecoder()
+                let favorites = try decoder.decode([RecipeDetails].self, from: data)
+                return favorites
+            } catch {
+                print("Error decoding favorites: \(error)")
+            }
+        }
+        return []
+    }
+
+    func toggleFavorite(_ recipe: RecipeDetails) {
+        var favorites = getFavorites()
+
+        if let index = favorites.firstIndex(where: { $0.id == recipe.id }) {
             favorites.remove(at: index)
         } else {
-            favorites.append(recipeId)
+            favorites.append(recipe)
         }
-        
-        userDefaults.set(favorites, forKey: favoritesKey)
+
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(favorites)
+            userDefaults.set(data, forKey: favoritesKey)
+        } catch {
+            print("Error encoding favorites: \(error)")
+        }
     }
-    
-    func isRecipeFavorite(recipeId: Int) -> Bool {
-        let favorites = userDefaults.array(forKey: favoritesKey) as? [Int] ?? []
-        return favorites.contains(recipeId)
+
+    func isFavorite(_ recipe: RecipeDetails) -> Bool {
+        let favorites = getFavorites()
+        return favorites.contains { $0.id == recipe.id }
     }
 }
+
