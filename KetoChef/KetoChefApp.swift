@@ -39,7 +39,7 @@ struct ContentView: View {
                     Label("Favorites", systemImage: "star")
                 }
             
-            AccountView()
+            AuthenticationView()
                 .tabItem {
                     Label("Account", systemImage: "person")
                 }
