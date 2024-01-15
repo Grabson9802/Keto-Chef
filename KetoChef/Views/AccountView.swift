@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AccountView: View {
     @ObservedObject var viewModel: AccountViewModel
+    @State private var isPresented = false
     
     var body: some View {
         NavigationView {
@@ -20,6 +21,18 @@ struct AccountView: View {
                             .foregroundColor(.black)
                     }
                     }
+                    
+                    Section(header: Text("Account")) {
+                        Button {
+                            isPresented.toggle()
+                        } label: {
+                            Text("Change Password")
+                                .foregroundColor(.black)
+                                .sheet(isPresented: $isPresented) {
+                                    PasswordResetView()
+                                }
+                        }
+                    }
                 }
                 .navigationBarItems(trailing: Button {
                     viewModel.logout()
@@ -28,6 +41,7 @@ struct AccountView: View {
                         .foregroundColor(.black)
                 }
                 )
+                .navigationTitle("Settings")
             } else {
                 VStack {
                     TextField("Email", text: $viewModel.email)
@@ -84,6 +98,7 @@ struct AccountView: View {
                 .alert(isPresented: $viewModel.showAlert) {
                     Alert(title: Text("Authentication"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
                 }
+                .navigationTitle("Authentication")
             }
         }
     }

@@ -13,7 +13,6 @@ class RecipeViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
     @Published var filteredRecipes: [Recipe] = []
     @Published var selectedRecipeDetails: RecipeDetails?
-    @Published var isLoading: Bool = false
     @Published var cookingSteps: [CookingSteps] = []
     @Published var favoriteRecipes: [RecipeDetails] = []
     @Published var searchQuery: String = "" {
@@ -65,19 +64,16 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func fetchRecipes(offset: Int, completion: (() -> Void)? = nil) {
-        isLoading = true
-        recipeService.fetchRecipes(offset: offset) { result in
+    func fetchRecipes(offset: Int, sort: SortingOption) {
+        recipeService.fetchRecipes(offset: offset, sort: sort) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let recipes):
                     self.recipes = recipes.results
                     self.filteredRecipes = self.recipes
-                    self.isLoading = false
                 case .failure(let error):
                     print("Error fetching recipes: \(error)")
                 }
-                completion?()
             }
         }
     }

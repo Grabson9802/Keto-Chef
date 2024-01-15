@@ -18,7 +18,8 @@ class RecipeMockService: RecipeServiceProtocol {
                                                 .init(number: 1,
                                                       step: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                                                       ingredients: [
-                                                        .init(id: 0, name: "Name",
+                                                        .init(id: 0, 
+                                                              name: "Name",
                                                               image: "https://via.placeholder.com/600x400")
                                                       ])
                                              ]),
@@ -27,7 +28,8 @@ class RecipeMockService: RecipeServiceProtocol {
                                                 .init(number: 1,
                                                       step: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                                                       ingredients: [
-                                                        .init(id: 0, name: "Name",
+                                                        .init(id: 0, 
+                                                              name: "Name",
                                                               image: "https://via.placeholder.com/600x400")
                                                       ])
                                              ])
@@ -53,34 +55,6 @@ class RecipeMockService: RecipeServiceProtocol {
                                                 .init(id: 2,
                                                       name: "Salami",
                                                       amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 3,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 4,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 5,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 6,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 7,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 8,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 9,
-                                                      name: "Salami",
-                                                      amount: 80,
                                                       measures: .init(metric: .init(unitLong: "g")))
                                                ]),
                                  RecipeDetails(id: 1,
@@ -98,34 +72,6 @@ class RecipeMockService: RecipeServiceProtocol {
                                                       amount: 2,
                                                       measures: .init(metric: .init(unitLong: "Pieces"))),
                                                 .init(id: 2,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 3,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 4,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 5,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 6,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 7,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 8,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 9,
                                                       name: "Salami",
                                                       amount: 80,
                                                       measures: .init(metric: .init(unitLong: "g")))
@@ -147,43 +93,14 @@ class RecipeMockService: RecipeServiceProtocol {
                                                 .init(id: 2,
                                                       name: "Salami",
                                                       amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 3,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 4,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 5,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 6,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 7,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 8,
-                                                      name: "Salami",
-                                                      amount: 80,
-                                                      measures: .init(metric: .init(unitLong: "g"))),
-                                                .init(id: 9,
-                                                      name: "Salami",
-                                                      amount: 80,
                                                       measures: .init(metric: .init(unitLong: "g")))
                                                ])
         ]
         completion(.success(mockDetailRecipes.randomElement()!))
     }
     
-    func fetchRecipes(offset: Int = 0, completion: @escaping (Result<RecipeResponse, Error>) -> Void) {
-        let mockRecipes = RecipeResponse(
-            results: [
+    func fetchRecipes(offset: Int = 0, sort: SortingOption, completion: @escaping (Result<RecipeResponse, Error>) -> Void) {
+        let mockRecipes = RecipeResponse(results: [
             Recipe(id: 1, title: "Mock Recipe 1", image: "https://via.placeholder.com/600x400"),
             Recipe(id: 2, title: "Mock Recipe 2", image: "https://via.placeholder.com/600x400"),
             Recipe(id: 3, title: "Mock Recipe 3", image: "https://via.placeholder.com/600x400"),
@@ -194,8 +111,7 @@ class RecipeMockService: RecipeServiceProtocol {
             Recipe(id: 8, title: "Mock Recipe 8", image: "https://via.placeholder.com/600x400"),
             Recipe(id: 9, title: "Mock Recipe 9", image: "https://via.placeholder.com/600x400"),
             Recipe(id: 10, title: "Mock Recipe 10", image: "https://via.placeholder.com/600x400"),
-        ],
-            totalResults: 220)
+        ],totalResults: 220)
         
         completion(.success(mockRecipes))
     }

@@ -45,8 +45,9 @@ class RecipeAPIService: RecipeServiceProtocol {
         task.resume()
     }
     
-    func fetchRecipes(offset: Int = 0, completion: @escaping (Result<RecipeResponse, Error>) -> Void) {
-        let url = "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&sort=popularity&sortDirection=desc&offset=\(offset * 100)&number=100&apiKey=\(apiKey)"
+    func fetchRecipes(offset: Int = 0, sort: SortingOption = .popularity, completion: @escaping (Result<RecipeResponse, Error>) -> Void) {
+        print("sort", sort)
+        let url = "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&sort=\(sort)&offset=\(offset * 100)&number=100&apiKey=\(apiKey)"
         makeRequest(urlString: url, completion: completion)
     }
     
@@ -64,4 +65,11 @@ class RecipeAPIService: RecipeServiceProtocol {
 enum NetworkError: Error {
     case invalidURL
     case noData
+}
+
+enum SortingOption: String, CaseIterable {
+    case popularity = "popularity"
+    case energy = "energy"
+    case healthiness = "healthiness"
+    case time = "time"
 }

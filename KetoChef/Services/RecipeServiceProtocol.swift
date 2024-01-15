@@ -6,7 +6,7 @@
 //
 
 protocol RecipeServiceProtocol {
-    func fetchRecipes(offset: Int, completion: @escaping (Result<RecipeResponse, Error>) -> Void)
+    func fetchRecipes(offset: Int, sort: SortingOption, completion: @escaping (Result<RecipeResponse, Error>) -> Void)
     func fetchRecipeDetails(for recipeId: Int, completion: @escaping (Result<RecipeDetails, Error>) -> Void)
     func fetchAnalyzedInstructions(for recipeId: Int, completion: @escaping (Result<[CookingSteps], Error>) -> Void)
 }

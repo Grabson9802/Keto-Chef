@@ -20,7 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct KetoChefApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeMockService.shared)
+    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeAPIService.shared)
     @ObservedObject private var authenticationViewModel = AccountViewModel()
     
     var body: some Scene {

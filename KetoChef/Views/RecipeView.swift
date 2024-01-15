@@ -12,8 +12,9 @@ struct RecipeView: View {
     @State private var selectedRecipe: Recipe?
     @State private var isSearching = false
     @State private var searchText = ""
-    @State private var isLoading = false
     @State private var currentPage: Int = 0
+    @State private var selectedSortingOption: SortingOption = .popularity
+    @State private var showSortOptions = false
     
     var body: some View {
         NavigationView {
@@ -25,21 +26,43 @@ struct RecipeView: View {
                     
                     Spacer()
                     
-                    Button {
-                        withAnimation {
-                            isSearching.toggle()
-                            if !isSearching {
-                                viewModel.performSearch(with: searchText)
-                            } else {
-                                viewModel.searchQuery = ""
-                            }
+                    HStack {
+                        Button {
+                            showSortOptions.toggle()
+                        } label: {
+                            Image(systemName: "line.3.horizontal")
+                                .frame(width: 36, height: 36)
+                                .foregroundColor(.black)
+                                .background(Color.black.opacity(0.15))
+                                .cornerRadius(50)
                         }
-                    } label: {
-                        Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
-                            .frame(width: 36, height: 36)
-                            .foregroundColor(.black)
-                            .background(Color.black.opacity(0.15))
-                            .cornerRadius(50)
+                        .actionSheet(isPresented: $showSortOptions) {
+                            ActionSheet(title: Text("Sort Options"), buttons: SortingOption.allCases.map { option in
+                                ActionSheet.Button.default(Text(option.rawValue.capitalizingFirstLetter())) {
+                                    if selectedSortingOption != option {
+                                        selectedSortingOption = option
+                                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
+                                    }
+                                }
+                            } + [.cancel()]
+                            )
+                        }
+                        Button {
+                            withAnimation {
+                                isSearching.toggle()
+                                if !isSearching {
+                                    viewModel.performSearch(with: searchText)
+                                } else {
+                                    viewModel.searchQuery = ""
+                                }
+                            }
+                        } label: {
+                            Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
+                                .frame(width: 36, height: 36)
+                                .foregroundColor(.black)
+                                .background(Color.black.opacity(0.15))
+                                .cornerRadius(50)
+                        }
                     }
                 }
                 .padding(.horizontal)
@@ -71,7 +94,7 @@ struct RecipeView: View {
                         Button {
                             if currentPage > 0 {
                                 currentPage -= 1
-                                viewModel.fetchRecipes(offset: currentPage)
+                                viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
                             }
                         } label: {
                             Image(systemName: "chevron.left")
@@ -84,7 +107,7 @@ struct RecipeView: View {
                         Button {
                             if viewModel.hasEnoughDataToChangePage() {
                                 currentPage += 1
-                                viewModel.fetchRecipes(offset: currentPage)
+                                viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
                             }
                         } label: {
                             Image(systemName: "chevron.right")
@@ -92,20 +115,10 @@ struct RecipeView: View {
                                 .foregroundColor(viewModel.hasEnoughDataToChangePage() ? .black : .gray)
                         }
                     }
-                    
-                    if isLoading {
-                        VStack {
-                            ProgressView("Loading...")
-                                .padding(.top, UIScreen.main.bounds.height / 4)
-                        }
-                    }
                 }
                 .onAppear {
                     if viewModel.recipes.isEmpty {
-                        isLoading = true
-                        viewModel.fetchRecipes(offset: currentPage) {
-                            isLoading = false
-                        }
+                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
                     }
                 }
             }
