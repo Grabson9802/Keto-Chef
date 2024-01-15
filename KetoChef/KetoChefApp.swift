@@ -10,7 +10,9 @@ import FirebaseCore
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FirebaseApp.configure()
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
         return true
     }
 }
@@ -18,7 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct KetoChefApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeAPIService.shared)
+    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeMockService.shared)
     @ObservedObject private var authenticationViewModel = AccountViewModel()
     
     var body: some Scene {

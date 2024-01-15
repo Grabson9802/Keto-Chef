@@ -29,6 +29,7 @@ struct FavoritesView: View {
             .onAppear {
                 viewModel.getFavoriteRecipes()
             }
+            .navigationTitle("Favorites")
         }
     }
 }
