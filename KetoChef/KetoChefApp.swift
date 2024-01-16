@@ -20,14 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct KetoChefApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeAPIService.shared)
+    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeMockService.shared)
     @ObservedObject private var authenticationViewModel = AccountViewModel()
+    @ObservedObject private var shoppingListViewModel = ShoppingListViewModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(authenticationViewModel)
                 .environmentObject(recipeViewModel)
+                .environmentObject(shoppingListViewModel)
         }
     }
 }
@@ -35,6 +37,7 @@ struct KetoChefApp: App {
 struct ContentView: View {
     @EnvironmentObject private var recipeViewModel: RecipeViewModel
     @EnvironmentObject private var authenticationViewModel: AccountViewModel
+    @EnvironmentObject private var shoppingListViewModel: ShoppingListViewModel
     
     var body: some View {
         TabView(selection: $authenticationViewModel.selectedTabIndex)  {
@@ -45,17 +48,23 @@ struct ContentView: View {
                     }
                     .tag(0)
                 
+                ShoppingListView(viewModel: shoppingListViewModel)
+                    .tabItem {
+                        Label("Shopping List", systemImage: "cart.fill")
+                    }
+                    .tag(1)
+                
                 FavoritesView(viewModel: recipeViewModel)
                     .tabItem {
                         Label("Favorites", systemImage: "star")
                     }
-                    .tag(1)
+                    .tag(2)
                 
                 AccountView(viewModel: authenticationViewModel)
                     .tabItem {
                         Label("Account", systemImage: "person")
                     }
-                    .tag(2)
+                    .tag(3)
             }
             .onAppear {
                 authenticationViewModel.checkUserLoggedIn()

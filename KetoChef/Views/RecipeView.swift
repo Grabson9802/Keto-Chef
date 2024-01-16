@@ -37,7 +37,7 @@ struct RecipeView: View {
                                 .cornerRadius(50)
                         }
                         .actionSheet(isPresented: $showSortOptions) {
-                            ActionSheet(title: Text("Sort Options"), buttons: SortingOption.allCases.map { option in
+                            ActionSheet(title: Text("Sort by"), buttons: SortingOption.allCases.map { option in
                                 ActionSheet.Button.default(Text(option.rawValue.capitalizingFirstLetter())) {
                                     if selectedSortingOption != option {
                                         selectedSortingOption = option
