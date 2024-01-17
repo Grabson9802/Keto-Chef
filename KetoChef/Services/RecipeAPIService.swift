@@ -45,11 +45,6 @@ class RecipeAPIService: RecipeServiceProtocol {
         task.resume()
     }
     
-    func fetchYouTubeVideos() {
-        let apiKey = "AIzaSyDZwytqHcPv8zB4xnbrstHAEzBVVMAcDx8"
-        
-    }
-    
     func fetchRecipes(offset: Int = 0, sort: SortingOption = .popularity, completion: @escaping (Result<RecipeResponse, Error>) -> Void) {
         let url = "https://api.spoonacular.com/recipes/complexSearch?diet=ketogenic&sort=\(sort)&offset=\(offset * 100)&number=100&apiKey=\(apiKey)"
         makeRequest(urlString: url, completion: completion)
