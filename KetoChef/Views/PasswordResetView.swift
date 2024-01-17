@@ -16,7 +16,7 @@ struct PasswordResetView: View {
 
     var body: some View {
         VStack {
-            TextField("Email", text: $email)
+            TextField("Enter e-mail", text: $email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
 

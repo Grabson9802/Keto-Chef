@@ -17,7 +17,7 @@ struct AccountView: View {
                 Form {
                     Section(header: Text("Premium")) { Button {
                     } label: {
-                        Text("Buy Premium")
+                        Text("Buy Premium Features")
                             .foregroundColor(.black)
                     }
                     }

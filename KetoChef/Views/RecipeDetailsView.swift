@@ -24,6 +24,8 @@ struct RecipeDetailsView: View {
                     if let url = URL(string: recipeDetails.image) {
                         AsyncImageView(url: url)
                             .frame(width: geometry.size.width, height: geometry.size.height / 2)
+                            .clipShape(BottomRoundedRect(radius: 20))
+                            .shadow(radius: 5)
                             .edgesIgnoringSafeArea(.top)
                             .id(UUID())
                     }
@@ -31,13 +33,14 @@ struct RecipeDetailsView: View {
                     VStack {
                         ZStack(alignment: .top) {
                             HStack {
-                                
                                 Spacer()
                                 
                                 Button {
                                     isRecipeFavorite.toggle()
                                     FavoritesManager.shared.toggleFavorite(recipeDetails)
-                                    viewModel.getFavoriteRecipes()
+                                    viewModel.getFavoriteRecipes() {
+                                        
+                                    }
                                 } label: {
                                     Image(systemName: isRecipeFavorite ? "star.fill" : "star")
                                         .resizable()
@@ -134,9 +137,9 @@ struct RecipeDetailsView: View {
                     .background(Color.white)
                     .cornerRadius(10)
                     .padding(.horizontal)
-                    .frame(height: geometry.size.height / 1.7)
+                    .frame(height: geometry.size.height / 1.5)
+                    .offset(y: -150)
                     .shadow(radius: 5)
-                    .offset(y: -geometry.size.height / 8)
                 } else {
                     if isLoading {
                         ProgressView("Loading...")

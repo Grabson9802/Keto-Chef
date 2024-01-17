@@ -14,7 +14,8 @@ class RecipeViewModel: ObservableObject {
     @Published var filteredRecipes: [Recipe] = []
     @Published var selectedRecipeDetails: RecipeDetails?
     @Published var cookingSteps: [CookingSteps] = []
-    @Published var favoriteRecipes: [RecipeDetails] = []
+    @Published var favoriteRecipesInDetails: [RecipeDetails] = []
+    @Published var favoriteRecipes: [Recipe] = []
     @Published var searchQuery: String = "" {
         didSet {
             performSearch(with: searchQuery)
@@ -32,8 +33,14 @@ class RecipeViewModel: ObservableObject {
         })
     }
     
-    func getFavoriteRecipes() {
-        favoriteRecipes = FavoritesManager.shared.getFavorites()
+    func getFavoriteRecipes(completion: @escaping (() -> Void)) {
+        favoriteRecipesInDetails = FavoritesManager.shared.getFavorites()
+        var tempArr: [Recipe] = []
+        favoriteRecipesInDetails.forEach { favoriteRecipe in
+            tempArr.append(Recipe(id: favoriteRecipe.id, title: favoriteRecipe.title, image: favoriteRecipe.image))
+        }
+        favoriteRecipes = tempArr
+        completion()
     }
     
     func fetchCookingSteps(for recipeId: Int, completion: (() -> Void)? = nil) {
@@ -64,13 +71,14 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func fetchRecipes(offset: Int, sort: SortingOption) {
+    func fetchRecipes(offset: Int, sort: SortingOption, completion: @escaping (() -> Void)) {
         recipeService.fetchRecipes(offset: offset, sort: sort) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let recipes):
                     self.recipes = recipes.results
                     self.filteredRecipes = self.recipes
+                    completion()
                 case .failure(let error):
                     print("Error fetching recipes: \(error)")
                 }

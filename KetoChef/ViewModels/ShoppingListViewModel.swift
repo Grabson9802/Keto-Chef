@@ -11,7 +11,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var shoppingItems: [ShoppingItem] = []
     
     init() {
-        shoppingItems = ShoppingItemsManager.shared.getShoppingItems()
+        getShoppingItems()
     }
     
     func add(shoppingItem: ShoppingItem) {
@@ -19,12 +19,16 @@ class ShoppingListViewModel: ObservableObject {
         saveChanges()
     }
     
-    func deleteItem(at offsets: IndexSet) {
-        shoppingItems.remove(atOffsets: offsets)
+    func deleteItem(with id: String) {
+        shoppingItems.removeAll(where: {$0.name == id})
         saveChanges()
     }
     
     func saveChanges() {
         ShoppingItemsManager.shared.saveShoppingItems(shoppingItems: shoppingItems)
+    }
+    
+    func getShoppingItems() {
+        shoppingItems = ShoppingItemsManager.shared.getShoppingItems()
     }
 }

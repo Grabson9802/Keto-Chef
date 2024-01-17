@@ -15,112 +15,142 @@ struct RecipeView: View {
     @State private var currentPage: Int = 0
     @State private var selectedSortingOption: SortingOption = .popularity
     @State private var showSortOptions = false
+    @State private var isDataLoaded = false
+    
+    let onFavoritesView: Bool
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                HStack {
-                    Text("Keto Chef")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    
+            GeometryReader { geometry in
+                VStack(spacing: 0) {
                     Spacer()
-                    
                     HStack {
-                        Button {
-                            showSortOptions.toggle()
-                        } label: {
-                            Image(systemName: "line.3.horizontal")
-                                .frame(width: 36, height: 36)
-                                .foregroundColor(.black)
-                                .background(Color.black.opacity(0.15))
-                                .cornerRadius(50)
-                        }
-                        .actionSheet(isPresented: $showSortOptions) {
-                            ActionSheet(title: Text("Sort by"), buttons: SortingOption.allCases.map { option in
-                                ActionSheet.Button.default(Text(option.rawValue.capitalizingFirstLetter())) {
-                                    if selectedSortingOption != option {
-                                        selectedSortingOption = option
-                                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
+                        Text(onFavoritesView ? "Favorite Recipes" : "Keto Chef")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                        
+                        if !onFavoritesView {
+                            HStack {
+                                Button {
+                                    showSortOptions.toggle()
+                                } label: {
+                                    Image(systemName: "line.3.horizontal")
+                                        .frame(width: 36, height: 36)
+                                        .foregroundColor(.black)
+                                        .background(Color.black.opacity(0.15))
+                                        .cornerRadius(50)
+                                }
+                                .actionSheet(isPresented: $showSortOptions) {
+                                    ActionSheet(title: Text("Sort by"), buttons: SortingOption.allCases.map { option in
+                                        ActionSheet.Button.default(Text(option.rawValue.capitalizingFirstLetter())) {
+                                            if selectedSortingOption != option {
+                                                selectedSortingOption = option
+                                                viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption) {
+                                                    isDataLoaded = true
+                                                }
+                                            }
+                                        }
+                                    } + [.cancel()]
+                                    )
+                                }
+                                Button {
+                                    withAnimation {
+                                        isSearching.toggle()
+                                        if !isSearching {
+                                            viewModel.performSearch(with: searchText)
+                                        } else {
+                                            viewModel.searchQuery = ""
+                                        }
                                     }
-                                }
-                            } + [.cancel()]
-                            )
-                        }
-                        Button {
-                            withAnimation {
-                                isSearching.toggle()
-                                if !isSearching {
-                                    viewModel.performSearch(with: searchText)
-                                } else {
-                                    viewModel.searchQuery = ""
+                                } label: {
+                                    Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
+                                        .frame(width: 36, height: 36)
+                                        .foregroundColor(.black)
+                                        .background(Color.black.opacity(0.15))
+                                        .cornerRadius(50)
                                 }
                             }
-                        } label: {
-                            Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
-                                .frame(width: 36, height: 36)
-                                .foregroundColor(.black)
-                                .background(Color.black.opacity(0.15))
-                                .cornerRadius(50)
                         }
                     }
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-                
-                ScrollView(showsIndicators: false) {
-                    if isSearching {
-                        TextField("Search recipes...", text: $viewModel.searchQuery)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
                     
-                    VStack(spacing: 16) {
-                        ForEach(viewModel.filteredRecipes) { recipe in
-                            RecipeItemView(recipe: recipe)
-                                .onTapGesture {
-                                    selectedRecipe = recipe
-                                }
-                                .fullScreenCover(item: $selectedRecipe) { recipe in
-                                    RecipeDetailsView(viewModel: viewModel, recipeId: recipe.id)
-                                }
-                        }
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    HStack {
-                        Button {
-                            if currentPage > 0 {
-                                currentPage -= 1
-                                viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
-                            }
-                        } label: {
-                            Image(systemName: "chevron.left")
+                    ScrollView(showsIndicators: false) {
+                        if isSearching {
+                            TextField("Search recipes...", text: $viewModel.searchQuery)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .padding()
-                                .foregroundColor(currentPage == 0 ? .gray : .black)
                         }
                         
-                        Text("Page \(currentPage + 1)")
-                        
-                        Button {
-                            if viewModel.hasEnoughDataToChangePage() {
-                                currentPage += 1
-                                viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
+                        VStack(spacing: 16) {
+                            ForEach(onFavoritesView ? viewModel.favoriteRecipes : viewModel.filteredRecipes) { recipe in
+                                RecipeItemView(recipe: recipe)
+                                    .frame(maxHeight: geometry.size.width / 2)
+                                    .onTapGesture {
+                                        selectedRecipe = recipe
+                                    }
+                                    .fullScreenCover(item: $selectedRecipe) { recipe in
+                                        RecipeDetailsView(viewModel: viewModel, recipeId: recipe.id)
+                                    }
                             }
-                        } label: {
-                            Image(systemName: "chevron.right")
-                                .padding()
-                                .foregroundColor(viewModel.hasEnoughDataToChangePage() ? .black : .gray)
+                        }
+                        .padding()
+                        
+                        if isDataLoaded {
+                            HStack {
+                                Button {
+                                    if currentPage > 0 && !onFavoritesView {
+                                        currentPage -= 1
+                                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption) {
+                                            isDataLoaded = true
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.left")
+                                        .padding()
+                                        .foregroundColor(currentPage == 0 ? .gray : .black)
+                                }
+                                
+                                Text("Page \(currentPage + 1)")
+                                
+                                Button {
+                                    if !onFavoritesView && viewModel.hasEnoughDataToChangePage() {
+                                        currentPage += 1
+                                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption) {
+                                            isDataLoaded = true
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.right")
+                                        .padding()
+                                        .foregroundColor(viewModel.hasEnoughDataToChangePage() ? .black : .gray)
+                                }
+                            }
+                        } else {
+                            ProgressView("Loading...")
+                        }
+                    }
+                    .onAppear {
+                        if onFavoritesView {
+                            viewModel.getFavoriteRecipes() {
+                                isDataLoaded = true
+                            }
+                        }
+                        if viewModel.recipes.isEmpty {
+                            viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption) {
+                                isDataLoaded = true
+                            }
                         }
                     }
                 }
-                .onAppear {
-                    if viewModel.recipes.isEmpty {
-                        viewModel.fetchRecipes(offset: currentPage, sort: selectedSortingOption)
-                    }
-                }
+                .background(
+                    RoundedRectangle(cornerRadius: 50, style: .continuous)
+                        .foregroundColor(.yellow)
+                        .frame(width: 400, height: 300)
+                        .offset(y: -300)
+                )
             }
         }
     }
@@ -133,19 +163,19 @@ struct RecipeItemView: View {
         ZStack(alignment: .bottomLeading) {
             if let url = URL(string: recipe.image) {
                 AsyncImageView(url: url)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 GeometryReader { geometry in
                     VStack(alignment: .leading) {
                         Spacer()
                         Text(recipe.title)
                             .font(.headline)
+                            .fontWeight(.bold)
                             .lineLimit(2)
                             .padding(8)
                             .padding(.leading, 10)
                             .frame(width: geometry.size.width, alignment: .leading)
                             .background(
-                                BlurView(style: .dark)
+                                BlurView(style: .systemUltraThinMaterialDark)
                             )
                             .foregroundColor(.white)
                     }
@@ -157,5 +187,5 @@ struct RecipeItemView: View {
 }
 
 #Preview {
-    RecipeView(viewModel: RecipeViewModel(recipeService: RecipeMockService.shared))
+    RecipeView(viewModel: RecipeViewModel(recipeService: RecipeMockService.shared), onFavoritesView: false)
 }

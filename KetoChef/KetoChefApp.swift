@@ -20,9 +20,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct KetoChefApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeMockService.shared)
+    @ObservedObject private var recipeViewModel = RecipeViewModel(recipeService: RecipeAPIService.shared)
     @ObservedObject private var authenticationViewModel = AccountViewModel()
     @ObservedObject private var shoppingListViewModel = ShoppingListViewModel()
+    @ObservedObject private var educationViewModel = EducationViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -30,6 +31,7 @@ struct KetoChefApp: App {
                 .environmentObject(authenticationViewModel)
                 .environmentObject(recipeViewModel)
                 .environmentObject(shoppingListViewModel)
+                .environmentObject(educationViewModel)
         }
     }
 }
@@ -38,11 +40,12 @@ struct ContentView: View {
     @EnvironmentObject private var recipeViewModel: RecipeViewModel
     @EnvironmentObject private var authenticationViewModel: AccountViewModel
     @EnvironmentObject private var shoppingListViewModel: ShoppingListViewModel
+    @EnvironmentObject private var educationViewModel: EducationViewModel
     
     var body: some View {
         TabView(selection: $authenticationViewModel.selectedTabIndex)  {
             Group {
-                RecipeView(viewModel: recipeViewModel)
+                RecipeView(viewModel: recipeViewModel, onFavoritesView: false)
                     .tabItem {
                         Label("Recipes", systemImage: "book")
                     }
@@ -54,17 +57,23 @@ struct ContentView: View {
                     }
                     .tag(1)
                 
-                FavoritesView(viewModel: recipeViewModel)
+                RecipeView(viewModel: recipeViewModel, onFavoritesView: true)
                     .tabItem {
                         Label("Favorites", systemImage: "star")
                     }
                     .tag(2)
                 
+                EducationView(viewModel: educationViewModel)
+                    .tabItem {
+                        Label("Education", systemImage: "book.circle.fill")
+                    }
+                    .tag(3)
+                
                 AccountView(viewModel: authenticationViewModel)
                     .tabItem {
                         Label("Account", systemImage: "person")
                     }
-                    .tag(3)
+                    .tag(4)
             }
             .onAppear {
                 authenticationViewModel.checkUserLoggedIn()

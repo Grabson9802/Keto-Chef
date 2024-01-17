@@ -42,7 +42,7 @@ class AccountViewModel: ObservableObject {
         do {
             try Auth.auth().signOut()
             resetProperties()
-            selectedTabIndex = 2
+            selectedTabIndex = 4
         } catch {
             alertMessage = "Error: \(error.localizedDescription)"
             showAlert = true
